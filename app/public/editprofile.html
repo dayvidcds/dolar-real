@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Heartmy - Configurações</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link rel="stylesheet" href="vendor/font-awesome/font-awesome.min.css">
+    <link rel="stylesheet" href="vendor/simple-line-icons/simple-line-icons.css">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Plugin CSS -->
+
+    <!-- Custom styles for this template -->
+    <link href="css/new-age.min.css" rel="stylesheet">
+    <link href="css/login.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top navbar-shrink" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand js-scroll-trigger" href="#page-top">Heartmy</a>
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          Menu
+        </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="/profile">Perfil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="#features">Tutorial</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="#contact">Contato</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="/api/logout">Sair</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 mx-auto">
+                    <div class="login-page">
+                        <div class="form">
+                            <p>Edite suas informações</p>
+                            <input type="text" placeholder="Seu nome" name="nome" id="nome" />
+                            <input type="email" placeholder="Seu email" name="email1" id="email1" />
+                            <input type="email" placeholder="Email de seu parceiro" name="email2" id="email2" />
+                            <input type="password" placeholder="Senha" name="senha" id="senha" />
+                            <input type="password" placeholder="Confirme a senha" name="confirm" id="confirm" />
+                            <button id="save">Salvar</button>
+                            <p>
+                                <div class="alert alert-primary" role="alert" id="error" style="display:block">
+                                    Dados que não forem alterados não serão modificados :)
+                                </div>
+                            </p>
+                        </div>
+                        <div class="form">
+                            <button id="excluir">Excluir conta :(</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; heartmy 2018. Todos os direitos reservados.</p>
+            <ul class="list-inline">
+                <li class="list-inline-item">
+                    <a href="#">Privacidade</a>
+                </li>
+                <li class="list-inline-item">
+                    <a href="#">Termos</a>
+                </li>
+            </ul>
+        </div>
+    </footer>
+
+    <script>
+        $('#nome').ready(function() {
+            //document.getElementById('a').innerHTML = "TESTE"
+            $.get("/api/find", function(data) {
+                //alert(JSON.stringify(data));
+                if (data !== null) {
+                    $("#nome").attr('placeholder', data.nome_usuario)
+                    $("#email1").attr('placeholder', data.email_usuario)
+                    $("#email2").attr('placeholder', data.email_parceiro)
+                }
+            })
+        })
+
+        $('#confirm').keyup(() => {
+            if ($("#senha").val() !== '') {
+                if ($('#confirm').val() === $('#senha').val()) {
+                    $('#error').attr('class', 'alert alert-success')
+                    $('#error').attr('style', 'display:block')
+                    $('#error').text('Senhas compatíveis!')
+                } else if ($('#confirm').val() === '') {
+                    $('#error').attr('class', 'alert alert-primary')
+                    $('#error').attr('style', 'display:block')
+                    $('#error').text('Dados que não forem alterados não serão modificados :)')
+                } else {
+                    $('#error').attr('class', 'alert alert-danger')
+                    $('#error').attr('style', 'display:block')
+                    $('#error').text('Senhas não compatíveis...')
+                }
+            }
+        })
+
+        $('#save').click(() => {
+            var email1, email2, nome
+            if ($('#email1').val() == '') {
+                email1 = $('#email1').attr('placeholder')
+            } else {
+                email1 = $('#email1').val()
+            }
+
+            if ($('#email2').val() == '') {
+                email2 = $('#email2').attr('placeholder')
+            } else {
+                email2 = $('#email2').val()
+            }
+
+            if ($('#nome').val() == '') {
+                nome = $('#nome').attr('placeholder')
+            } else {
+                nome = $('#nome').val()
+            }
+            if ($('#confirm').val() === $('#senha').val()) {
+                $.post("/api/update", {
+                    email1: email1,
+                    email2: email2,
+                    nome: nome,
+                    email_usuario: $('#email1').attr('placeholder'),
+                    email_parceiro: $('#email2').attr('placeholder'),
+                    senha: $("#senha").val()
+                }, (data) => {
+                    if (data !== 'ok') {
+                        $('#error').attr('style', 'display:block')
+                        $('#error').attr('class', 'alert alert-danger')
+                        $('#error').text(data)
+                    } else {
+                        $('#error').attr('class', 'alert alert-success')
+                        $('#error').attr('style', 'display:block')
+                        $('#error').text('Atualizando...')
+                        setTimeout(
+                            function() {
+                                $(location).attr('href', '/profile')
+                            }, 1000)
+                    }
+                })
+            } else {
+                $('#error').attr('class', 'alert alert-danger')
+                $('#error').attr('style', 'display:block')
+                $('#error').text('Senhas não compatíveis...')
+            }
+            setTimeout(function() {
+                $('#error').attr('class', 'alert alert-primary')
+                $('#error').attr('style', 'display:block')
+                $('#error').text('Dados que não forem alterados não serão modificados :)')
+            }, 4000)
+        })
+    </script>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for this template -->
+    <script src="js/new-age.min.js"></script>
+
+</body>
+
+</html>

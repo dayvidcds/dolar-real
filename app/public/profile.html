@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="DayvidCDS">
+
+  <title>DolarReal - Controls</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="vendor/bootstrap/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link rel="stylesheet" href="vendor/simple-line-icons/simple-line-icons.css">
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Muli" rel="stylesheet">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- Plugin CSS -->
+
+  <!-- Custom styles for this template -->
+  <link href="css/new-age.min.css" rel="stylesheet">
+  <link href="css/login.css" rel="stylesheet">
+
+  <script src="https://use.fontawesome.com/releases/v5.15.2/js/all.js" data-auto-replace-svg="nest"></script>
+
+</head>
+
+<body>
+
+  <div id="divPage" style="visibility:hidden;">
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top navbar-shrink" id="mainNav">
+      <div class="container">
+        <a class="navbar-brand js-scroll-trigger" href="#page-top" style="font-weight: bold;">DolarReal</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+          data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+          aria-label="Toggle navigation">
+          <i class="fas fa-ellipsis-h"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#features">Configurando seu quadro</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#contact">Sobre o projeto</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#contact">Contato</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="/logout" style="text-decoration: underline;"><b>Sair</b></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <section class="" style="margin-bottom: 130px;">
+
+      <div class="container">
+        <div class="row">
+          <div class="col-sm">
+            <div class="card" style="margin-bottom: 20px;">
+              <div class="card-header">
+                Cor do display
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">Escolha a cor padrão do display do quadro</h5>
+                <input type="color" id="colorPicker"
+                  style="margin-bottom: 15px; width: 50%; padding: 0; float: right;" /><br>
+                <button onclick="setColor()" class="btn btn-primary" style="margin-top: 9px;">Enviar</button>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm">
+            <div class="card" style="margin-bottom: 20px;">
+              <div class="card-header">
+                Velocidade do texto
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">Velociade em que o texto vai rolar no display</h5>
+                <input type="range" style="margin-bottom: 15px; width: 100%; padding: 0;" id="pDelay" /><br>
+                <button onclick="setDelay()" class="btn btn-primary">Enviar</button>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm">
+            <div class="card">
+              <div class="card-header">
+                Moeda
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">Qual será a moeda mostrada no display?</h5>
+
+                <label for="cars">Escolha a moeda: </label>
+
+                <select id="cars" style="float: right;" class="form-select">
+                  <option value="dolar">Dolar Americano</option>
+                  <option value="euro">Euro</option>
+                  <option value="libra">Libra esterlina</option>
+                  <option value="franco">Lene</option>
+                  <option value="franco">Dólar Australiano</option>
+                  <option value="franco">Franco Suíço</option>
+                  <option value="franco">Dólar Canadense</option>
+                  <option value="franco">Renminbi (Yuan)</option>
+                  <option value="franco">Peso Argentino</option>
+                  <option value="franco">Lira Turca</option>
+                </select><br>
+                <a href="#" class="btn btn-primary" style="margin-top: 3px;">Enviar</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <footer>
+      <div class="">
+        <p>&copy; DolarReal 2021. Todos os direitos reservados.</p>
+        <ul class="list-inline">
+          <li class="list-inline-item">
+            <a href="#">Privacidade</a>
+          </li>
+          <li class="list-inline-item">
+            <a href="#">Termos</a>
+          </li>
+        </ul>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    $(document).keypress(function (e) {
+      if (e.which == 13) $('#btn-entrar').click();
+
+    })
+
+    $(window).on("load", function () {
+
+      $('#divPage').attr('style', '');
+
+    });
+
+    function hexToRgb(hex) {
+      var bigint = parseInt(hex, 16);
+      var r = (bigint >> 16) & 255;
+      var g = (bigint >> 8) & 255;
+      var b = bigint & 255;
+
+      return r + "," + g + "," + b;
+    }
+
+    $(document).ready(() => {
+      $.get('/informations', (data) => {
+        //console.log(data);
+        $('#pDelay').val(data.user.deviceOptions.delayDisplay);
+        $('#colorPicker').val(rgbToHex(data.user.deviceOptions.ledColor.r, data.user.deviceOptions.ledColor.g, data.user.deviceOptions.ledColor.b));
+      });
+    });
+
+    $('#btn-entrar').click(() => {
+      $('#colorpicker').val()
+    })
+
+    function rgbToHex(r, g, b) {
+      return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    }
+
+    function setColor() {
+      const color = $('#colorPicker').val();
+      const rgbColor = hexToRgb(color.split('#')[1]);
+      $.post('/setColor', {
+        color: rgbColor
+      }, (data) => {
+        alert('Enviado!');
+        console.log(JSON.stringify(data));
+      });
+    }
+
+    function setDelay() {
+      const delay = $('#pDelay').val();
+      $.post('/setDelay', {
+        delay
+      }, (data) => {
+        alert('Enviado!');
+      });
+    }
+  </script>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Plugin JavaScript -->
+  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts for this template -->
+  <script src="js/new-age.min.js"></script>
+
+</body>
+
+</html>
